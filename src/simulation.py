@@ -218,8 +218,8 @@ def normalize_load(load, normalized_daily_load):
     return load / load_daily_average * normalized_daily_load
 
 def pretty_print(tag, value, col_width=30):
-    print tag.ljust(col_width),
-    print '%.2f' % value
+    print(tag.ljust(col_width),)
+    print('%.2f' % value)
 
 def run_simulation(battery_dict,
                    inverter_type='typical',
@@ -303,24 +303,25 @@ def run_simulation(battery_dict,
     panel_cost = panel_peak_kW * panel_cost_per_kW
 
     # print out row of latex table
-    print (inverter_type + ' ' + load_type + ' ' + battery_dict['type']).ljust(30),
-    print '&',
+    print((inverter_type + ' ' + load_type + ' ' +
+    battery_dict['type']).ljust(30), end='')
+    print('&', end='')
     #print '%.2f' % generation_size,
-    print '%.2f' % panel_peak_kW,
-    print '&',
-    print '%.2f' % battery_size_kWh,
-    print '&',
-    print '%.0f' % battery_npv,
-    print '&',
-    print '%.0f' % panel_cost,
-    print '\\\\'
+    print('%.2f' % panel_peak_kW, end='')
+    print('&', end='')
+    print('%.2f' % battery_size_kWh, end='')
+    print('&', end='')
+    print('%.0f' % battery_npv, end='')
+    print('&', end='')
+    print('%.0f' % panel_cost, end='')
+    print('\\\\')
 
     # output results to stdout
     if verbose:
         #print 'inverter type', inverter_type
         #print 'load type', load_type
-        print 'battery cost', battery_cost
-        print 'battery npv', battery_npv
+        print('battery cost', battery_cost)
+        print('battery npv', battery_npv)
         #pretty_print('battery excursion (Wh)', battery_size)
         #pretty_print('customer load (Wh)', df['load_customer'].sum())
         #pretty_print('end battery charge (Wh)', df.ix[len(df)-1]['battery_energy'])
@@ -352,7 +353,7 @@ def calc_battery_cost(battery_size, DOD, cost):
 
 def create_battery_cashflow(cost, life, lifetime=20):
     tl = [cost] + [0] * (life - 1)
-    l = tl * (lifetime/len(tl) + 1)
+    l = tl * (int(lifetime/len(tl)) + 1)
     return l[:21]
 
 def npv(rate, cashflows):
