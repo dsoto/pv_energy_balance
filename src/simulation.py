@@ -16,26 +16,6 @@ inverter_type = 'typical'
 load_type = 'day'
 load_type = 'night'
 load_type = 'continuous'
-#load_type = 'village'
-
-
-def lighting_load():
-    '''
-    loads a 'lighting-only' load from village data
-    '''
-    df = p.read_csv('ml05-1day.csv', index_col=0, parse_dates=True)
-    #return df['power'].dropna().values
-    #df = df['power'].dropna()
-    return p.Series(df['power'].values, index=df.index).dropna()
-
-def freezer_load():
-    '''
-    returns a Series object with a freezer village load
-    '''
-    df = p.read_csv('ml06-1day.csv', index_col=0, parse_dates=True)
-    #return df['power'].dropna().values
-    #df = df['power'].dropna()
-    return p.Series(df['power'].values, index=df.index).dropna()
 
 
 def calculate_LEGP(inverter,
@@ -267,12 +247,6 @@ def run_simulation(battery_dict,
         load = night_load()
     if load_type == 'continuous':
         load = cont_load()
-    #if load_type == 'village':
-        #load = get_load_from_csv()
-    if load_type == 'lighting':
-        load = lighting_load()
-    if load_type == 'freezer':
-        load = freezer_load()
 
     load = normalize_load(load, 3000)
     #print load
@@ -352,6 +326,10 @@ def calc_battery_cost(battery_size, DOD, cost):
     return battery_size / DOD * cost
 
 def create_battery_cashflow(cost, life, lifetime=20):
+    '''
+    returns a list of numbers representing the battery cost at each
+    point in time based on an integer number of years lifetime
+    '''
     tl = [cost] + [0] * (life - 1)
     l = tl * (int(lifetime/len(tl)) + 1)
     return l[:21]
