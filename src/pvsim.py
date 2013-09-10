@@ -11,7 +11,12 @@ from scipy import sin, cos, tan, arcsin, arccos, pi, exp
 class Inverter:
     '''
     Simulates an inverter allowing for calculation of input energy
-    demand based on output energy needed by load.
+    demand based on output energy needed by load.  An input/output curve
+    is interpolated to estimate power demanded by the inverter to
+    satisfy the load.
+
+    output_curve is a dictionary with two arrays.  these arrays are the
+    corresponding input and output power of the inverter.
     '''
     def __init__(self, output_curve):
         self.output_curve = output_curve
@@ -24,9 +29,15 @@ class Inverter:
 
 class Battery:
     '''
-    Simulates battery efficiency based on power draw.
+    Simulates battery efficiency based on power draw.  The class is
+    initialized using a dictionary, efficiency curve that has the output
+    power and energy efficiency of the battery at that load.  This
+    allows for the simulation of the decreased efficiency at high
+    current demand.
+
+    The class does not currently model the state of charge of the
+    battery.
     '''
-    # TODO: include storage?
 
     def __init__(self, efficiency_curve):
         self.efficiency_curve = efficiency_curve
@@ -40,7 +51,7 @@ class Battery:
 class Solar:
     '''
     Implements a clear-sky insolation model given latitude, longitude,
-    panel tilt, and solar constant.
+    and solar constant.
     '''
     lat = sp.radians(0)
     lon = sp.radians(0)

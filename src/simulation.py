@@ -100,11 +100,17 @@ def run_time_step(inverter,
     iterates over load and returns a dataframe with a dictionary result
     that contains the timeseries for the customer load, solar power,
     inverter power and the battery energy at the end of simulation.
+
+    load is a pandas timeseries object
     '''
 
+    # array for timeseries of stored battery energy
     battery_energy = [0]
+    # array for customer load timeseries (load customer array)
     lca = []
+    # array for inverter load timeseries (load inverter array)
     lia = []
+    # array for solar power timeseries (solar power array)
     spa = []
 
     for date in load.index:
@@ -146,6 +152,9 @@ def solve_wrapper(A, output_curve, battery_efficiency_curve, load, panel_efficie
     '''
     wraps the run_time_step method and returns only the battery energy
     so that it can be run in a solver routine.
+
+    a common solution condition is for the ending battery energy at the
+    end of the simulation to be equal to the starting battery energy.
     '''
     # create objects for simulation
     inverter = pvs.Inverter(output_curve)
@@ -236,6 +245,7 @@ def run_simulation(battery_dict,
     typical_output_curve = {'output_power':[ 0, 375, 750],
                             'input_power':[0+13, 375/.75, 750/.94]}
 
+    # TODO: pull these out and send the arrays into run_simulation
     if inverter_type == 'flat':
         output_curve = flat_output_curve
     if inverter_type == 'typical':
@@ -301,7 +311,7 @@ def run_simulation(battery_dict,
         #pretty_print('end battery charge (Wh)', df.ix[len(df)-1]['battery_energy'])
         #pretty_print('solar size (m^2)', generation_size)
 
-    # output plot of timesteps
+    # output plot of timeseries
     if plot:
         import matplotlib.pyplot as plt
         f, ax = plt.subplots(1, 1)
